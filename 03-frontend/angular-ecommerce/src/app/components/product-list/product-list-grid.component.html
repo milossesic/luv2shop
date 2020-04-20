@@ -18,6 +18,10 @@
                     </div>
     
                 </div>
+                <!--if no products display message-->
+                <div *ngIf="products?.length == 0" class="alert alert-warning col-md-12" role="alert">
+                    No products found with that name. Try something else?
+                </div>
             </div>
         </div>
     </div>
