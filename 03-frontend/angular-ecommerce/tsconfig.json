@@ -17,6 +17,10 @@
     ]
   },
   "angularCompilerOptions": {
+    //first two properties trigger a strict compilation for crappy typescript 
+    //which would compile everything even if it does not make any sense
+    "strictTemplates": true,
+    "enableI18nLegacyMessageIdFormat": false,
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
   }
