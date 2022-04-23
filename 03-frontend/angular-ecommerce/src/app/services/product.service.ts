@@ -19,20 +19,40 @@ export class ProductService {
     const productUrl = `${this.baseUrl}/${theProductId}`;
     //call the api with url
     return this.httpClient.get<Product>(productUrl);
-
   }
 
-//build the url based on keyword
-  searchProducts(theKeyword:string):Observable<Product[]>{
-    const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${theKeyword}`;
-    return this.getProducts(searchUrl);
-    
+  getProductListPaginate(thePage:number,
+                        thePageSize:number, 
+                        theCategoryId: number):Observable<GetResponseProducts>{
+    //build the url based on category id, page, pagesize
+    const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}`
+    +`&page=${thePage}&size=${thePageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
+
   getProductList(theCategoryId: number):Observable<Product[]>{
     //build the url based on category id
     const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}`;
     return this.getProducts(searchUrl);
   }
+
+  //build the url based on keyword
+  searchProducts(theKeyword:string):Observable<Product[]>{
+    const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${theKeyword}`;
+    return this.getProducts(searchUrl);
+  }
+
+  searchProductsPaginate(thePage:number,
+                        thePageSize:number, 
+                        theKeyword: string):Observable<GetResponseProducts>{
+    //build the url based on keyword, page, pagesize
+    const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${theKeyword}`;
+    +`&page=${thePage}&size=${thePageSize}`;
+    
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
+
   private getProducts(searchUrl: string): Observable<Product[]> {
     return this.httpClient.get<GetResponseProducts>(searchUrl).pipe(map(response => response._embedded.products));
   }
@@ -42,9 +62,16 @@ export class ProductService {
     map(response=>response._embedded.productCategory));
     } 
   }
+
 interface GetResponseProducts{
   _embedded:{
     products:Product[];
+  },
+  page:{
+    size:number,
+    totalElements:number,
+    totalPages:number,
+    number:number
   }
 }
 interface GetResponseProductCategory{
